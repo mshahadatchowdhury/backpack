@@ -10,16 +10,17 @@ class Backpack {
     protected $maxSizeCap;
     protected $totalWeight;
     protected $totalSize;
+    protected $userid;
 
     private $backpack = array();
 
-    function __construct($id, $maxWeightCap, $maxSizeCap, $totalWeight, $totalSize, $created, $updated) {
+    function __construct($id, $maxWeightCap, $maxSizeCap, $totalWeight, $totalSize, $userid) {
         $this->id = $id;
         $this->maxWeightCap = $maxWeightCap;
         $this->maxSizeCap = $maxSizeCap;
         $this->totalWeight = $totalWeight;
         $this->totalSize = $totalSize;
-        $this->created = new \DateTime("now");
+        $this->userid = $userid;
     }
 
     public function getId() {
@@ -62,6 +63,15 @@ class Backpack {
         $this->totalSize = $totalSize;
     }
 
+    public function getUserid() {
+        return $this->userid;
+    }
+
+    public function setUserid($userid){
+        $this->userid = $userid;
+    }
+
+    //add item to backpack
     public function add($item){
         $itemArr = array('id' => $item->id,
                          'name' => $item->name,
@@ -78,6 +88,7 @@ class Backpack {
             return false;
     }
 
+    //remove item from backpack
     public function remove($itemid){
         $arrIndex = getArrayIndex($itemid);
         if($arrIndex >= 0){
@@ -88,21 +99,25 @@ class Backpack {
             return false;
     }
 
+    //find item from backpack
     public function find($itemName){
-        $result = array();
         foreach($backpack as $key => $value){
             if ( $value["name"] == '$itemName' )
-                array_push($result, $value);
+                return true;
+        }
+        return false;
+    }
+
+    //display all items from backpack
+    public function showAll(){
+        $result = array();
+        foreach($backpack as $key => $value){
+            array_push($result, $value)
         }
         return $result;
     }
 
-    public function showAll(){
-        foreach($backpack as $key => $value){
-            echo 
-        }
-    }
-
+    //checking the capability of backpack to add new item
     private function isCapable($item){
         if(($this->maxWeightCap - $this->totalWeight >= $item->weight) && ($this->maxSizeCap - $this->totalSize >= $item->size)){
             return true;
@@ -111,6 +126,7 @@ class Backpack {
             return false;
     }
 
+    //get the index of item
     private function getArrayIndex($itemid){
         foreach($backpack as $key => $value){
             if ( $value["id"] === $itemid )
